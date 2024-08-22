@@ -1,7 +1,7 @@
 /* src/components/routes/MainFiles/MainFiles.css */
 
 .mainfiles-container {
-    background-color: rgb(233, 233, 233);
+    background-color: rgb(233, 233, 233); /* Default background color */
     padding: 20px;
     margin: auto;
     height: 55vh;
@@ -10,10 +10,14 @@
     width: 90%;
 }
 
-h5.mainfile-heading {
-    font-size: 1rem;
-    margin: 2px;
-    font-weight: 600;
+.blank-space {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #666;
+    font-size: 16px;
+    text-align: center;
 }
 
 .file-table-container {
@@ -21,12 +25,10 @@ h5.mainfile-heading {
     transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
-
 .file-table-container.visible {
     opacity: 1;
     transform: translateY(0);
 }
-
 
 .file-table {
     width: 100%;
@@ -41,7 +43,7 @@ h5.mainfile-heading {
     position: relative;
 }
 
-.th, td {
+th, td {
     padding: 5px;
     text-align: left;
 }
@@ -68,45 +70,6 @@ tr:hover {
     background-color: #f1f1f1;
 }
 
-/* input[type="text"] {
-    width: 70%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin: auto;
-    margin-bottom: 10px;
-} */
-
-/* button[type="button"], input[type="submit"] {
-    padding: 8px 12px;
-    border: none;
-    background-color: #364c63;
-    color: white;
-    cursor: pointer;
-    border-radius: 4px;
-} */
-
-/* button[type="button"]:hover, input[type="submit"]:hover {
-    background-color: #1a2532;
-} */
-
-a {
-    text-decoration: none;
-    color: #007BFF;
-} 
-
-a:hover {
-    text-decoration: underline;
-}
-
-.details {
-    display: table-row;
-}
-
-tr {
-    position: relative;
-}
-
 button.toggle-button {
     cursor: pointer;
     background-color: transparent;
@@ -118,22 +81,9 @@ button.toggle-button {
     transform: translateY(-50%);
 }
 
-td:hover .agent-sentiment-hover {
-    display: block;
-    position: absolute;
-    background-color: #f9f9f9;
-    padding: 5px;
-    border: 1px solid #ccc;
-    z-index: 1000;
-    left: 100%;
-    top: 0;
-    white-space: nowrap;
-}
+/* Add this to the existing MainFiles.css */
 
-.agent-sentiment-hover {
-    display: none;
-}
-
-tr.details-open td:hover .agent-sentiment-hover {
-    display: none;
+mainfiles-container .mark {
+    background-color: yellow;
+    color: black;
 }

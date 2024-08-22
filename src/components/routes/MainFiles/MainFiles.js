@@ -13,23 +13,26 @@ const MainFiles = ({ searchQuery }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(`http://localhost:3005/api/search-transcriptions?query=${searchQuery}`);
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                if (searchQuery) {
+                    const response = await fetch(`http://localhost:3005/api/search-translation?${searchQuery}`);
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    const result = await response.json();
+                    setData(result);
+                } else {
+                    setData([]);
                 }
-                const result = await response.json();
-                setData(result);
             } catch (error) {
                 setError(error.message);
             } finally {
                 setLoading(false);
             }
         };
-
-        if (searchQuery) {
-            fetchData();
-        }
+    
+        fetchData();
     }, [searchQuery]);
+    
 
     const toggleDetails = (id) => {
         if (openRowId === id) {
@@ -44,6 +47,14 @@ const MainFiles = ({ searchQuery }) => {
         }
     };
 
+    const highlightText = (text) => {
+        if (!searchQuery) return text;
+    
+        const regex = new RegExp(`(${searchQuery})`, 'gi'); // 'gi' for case-insensitive matching
+        return text.replace(regex, '<mark>$1</mark>');
+    };
+    
+
     if (loading) {
         return <div>Loading...</div>;
     }
@@ -54,8 +65,8 @@ const MainFiles = ({ searchQuery }) => {
 
     return (
         <div className="mainfiles-container" ref={containerRef}>
-            {data.length === 0 ? (
-                <p>No data found</p>
+            {data.length === 0 && !loading ? (
+                <div className="blank-space">Search for files to display results.</div>
             ) : (
                 data.map(item => (
                     <div key={item.id} id={`file-${item.id}`} className={`file-table-container ${openRowId === item.id ? 'visible' : 'hidden'}`}>
@@ -81,7 +92,7 @@ const MainFiles = ({ searchQuery }) => {
                                         </tr>
                                         <tr className="details">
                                             <th>Agent Transcription</th>
-                                            <td>{item.agent_transcription}</td>
+                                            <td dangerouslySetInnerHTML={{ __html: highlightText(item.agent_transcription) }} />
                                         </tr>
                                         <tr className="details">
                                             <th>Agent Translation</th>
@@ -93,7 +104,7 @@ const MainFiles = ({ searchQuery }) => {
                                         </tr>
                                         <tr className="details">
                                             <th>Customer Transcription</th>
-                                            <td>{item.customer_transcription}</td>
+                                            <td dangerouslySetInnerHTML={{ __html: highlightText(item.customer_transcription) }} />
                                         </tr>
                                         <tr className="details">
                                             <th>Customer Translation</th>
@@ -102,14 +113,6 @@ const MainFiles = ({ searchQuery }) => {
                                         <tr className="details">
                                             <th>Customer Sentiment Score</th>
                                             <td>{item.customer_sentiment_score}</td>
-                                        </tr>
-                                        <tr className="details">
-                                            <th>Abusive Count</th>
-                                            <td>{item.abusive_count}</td>
-                                        </tr>
-                                        <tr className="details">
-                                            <th>Contains Financial Info</th>
-                                            <td>{item.contains_financial_info}</td>
                                         </tr>
                                     </>
                                 )}

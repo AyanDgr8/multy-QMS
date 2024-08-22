@@ -1,6 +1,5 @@
 // src/components/routes/MainBody/MainBody/MainBody.js
 
-
 import React, { useState } from "react";
 import "./MainBody.css";
 
@@ -10,19 +9,20 @@ const MainBody = ({ onSearch }) => {
     const [timeBasis, setTimeBasis] = useState("");
     const [isAddWordsVisible, setIsAddWordsVisible] = useState(false);
 
-    // Clear the input fields
     const handleClearClick = () => {
         setSpokenWords("");
         setAddWords("");
         setTimeBasis("");
-        setIsAddWordsVisible(false); // Hide the add Words input when cleared
+        setIsAddWordsVisible(false);
     };
 
     const handleSearchClick = () => {
-        if (spokenWords.trim() !== "") {
-            onSearch(spokenWords);
+        if (onSearch && typeof onSearch === 'function') {
+            onSearch(spokenWords, addWords, timeBasis);  // Pass all the search terms
+        } else {
+            console.error('onSearch is not a function');
         }
-    };
+    };    
 
     return (
         <div>
@@ -35,7 +35,7 @@ const MainBody = ({ onSearch }) => {
                                     Spoken Words
                                 </span>
                                 <input
-                                    type="text"
+                                    type="search"
                                     className="form-control inp-ww"
                                     aria-label="Sizing example input"
                                     aria-describedby="inputGroup-sizing-sm"
@@ -59,7 +59,7 @@ const MainBody = ({ onSearch }) => {
                                         + Add Words
                                     </span>
                                     <input
-                                        type="text"
+                                        type="search"
                                         className="form-control inp-ww"
                                         aria-label="Sizing example input"
                                         aria-describedby="inputGroup-sizing-sm"
@@ -82,13 +82,15 @@ const MainBody = ({ onSearch }) => {
                             <button 
                                 type="button" 
                                 className="btn btn-primary clr-srch"
-                                onClick={handleSearchClick}>
+                                onClick={handleSearchClick}
+                            >
                                 Search
                             </button>
                         </div>
                     </div>
 
-                    {/* **************** */}
+
+                    {/* Additional Search Filters */}
 
                     <div className="mainb-second">
                         <div className="input-group find-contain">
@@ -98,8 +100,8 @@ const MainBody = ({ onSearch }) => {
                                     do
                                 </button>
                                 <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <li><a className="dropdown-item" href="#">do</a></li>
-                                    <li><a className="dropdown-item" href="#">do not</a></li>
+                                    <li className="dropdown-item" >do</li>
+                                    <li className="dropdown-item" >do not</li>
                                 </ul>
                             </div>
                             <span className="input-group-text text-fnd">contain</span>
@@ -108,8 +110,8 @@ const MainBody = ({ onSearch }) => {
                                     any
                                 </button>
                                 <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <li><a className="dropdown-item" href="#">any</a></li>
-                                    <li><a className="dropdown-item" href="#">all</a></li>
+                                    <li className="dropdown-item" >any</li>
+                                    <li className="dropdown-item" >all</li>
                                 </ul>
                             </div>
                             <span className="input-group-text text-fnd">of the Search Terms</span>
@@ -119,7 +121,7 @@ const MainBody = ({ onSearch }) => {
                         <div className="input-group find-contain">
                             <span className="input-group-text text-fnd">Time basis</span>
                             <input
-                                type="text"
+                                type="search"
                                 className="form-control time"
                                 value={timeBasis}
                                 onChange={(e) => setTimeBasis(e.target.value)}
@@ -129,8 +131,8 @@ const MainBody = ({ onSearch }) => {
                                     secs
                                 </button>
                                 <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <li><a className="dropdown-item" href="#">secs</a></li>
-                                    <li><a className="dropdown-item" href="#">mins</a></li>
+                                    <li className="dropdown-item" >secs</li>
+                                    <li className="dropdown-item" >mins</li>
                                 </ul>
                             </div>
                         </div>
