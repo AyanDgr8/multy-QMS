@@ -63,13 +63,12 @@
     color: grey;
     margin-left:1.5rem;
     margin-top: 0.5rem;
-    border: none;
     font-size: 0.9em;
     height: 1.5rem;
     line-height: normal;
-    font-size: 0.9em;
     padding: 0.1rem;
     border-radius: 10px;
+    border: none;
     width: 8vw;
 
 }

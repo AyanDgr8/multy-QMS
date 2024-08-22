@@ -1,20 +1,19 @@
 /* src/components/routes/MainFiles/MainFiles.css */
 
 .mainfiles-container {
-    background-color: rgb(233, 233, 233); /* Default background color */
-    padding: 20px;
+    /* background-color: rgb(233, 233, 233);  */
+    /* padding: 10px; */
     margin: auto;
     height: 55vh;
     overflow-y: auto;
     margin-top: 5vh;
-    width: 90%;
+    width: 100%;
 }
 
 .blank-space {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100%;
     color: #666;
     font-size: 16px;
     text-align: center;
@@ -31,9 +30,9 @@
 }
 
 .file-table {
-    width: 100%;
-    max-width: 1000px;
-    margin: 0 auto;
+    width: 95%;
+    /* max-width: 1000px; */
+    margin: auto;
     border-collapse: separate;
     border-spacing: 0;
     box-shadow: 0 2px 15px rgba(64, 64, 64, 0.1);

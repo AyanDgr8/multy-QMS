@@ -31,9 +31,6 @@ const Landing = () => {
         setSearchQuery(query);
         console.log('Search triggered with:', { spokenWords, addWords, timeBasis });
     };
-    
-    
-    
 
     return (
         <div>
