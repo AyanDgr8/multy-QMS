@@ -20,17 +20,16 @@ const Landing = () => {
 
     // Define the onSearch function
     const handleSearch = (spokenWords, addWords, timeBasis) => {
-        // Prepare the query parameters based on the presence of search terms
-        let queryParams = [];
-        
-        if (spokenWords) queryParams.push(`spokenWords=${encodeURIComponent(spokenWords)}`);
-        if (addWords) queryParams.push(`addWords=${encodeURIComponent(addWords)}`);
-        if (timeBasis) queryParams.push(`timeBasis=${encodeURIComponent(timeBasis)}`);
-    
-        const query = queryParams.join('&');
+        // Create searchQuery object with named properties
+        const query = {
+            spokenWords: spokenWords || '',
+            addWords: addWords || '',
+            timeBasis: timeBasis || ''
+        };
         setSearchQuery(query);
-        console.log('Search triggered with:', { spokenWords, addWords, timeBasis });
+        console.log('Search triggered with:', query);
     };
+    
 
     return (
         <div>

@@ -80,9 +80,17 @@ button.toggle-button {
     transform: translateY(-50%);
 }
 
+.highlight {
+    background-color: #EF6F53;
+    color: white;
+    font-weight: bold;
+}
+
+
 /* Add this to the existing MainFiles.css */
 
 mainfiles-container .mark {
     background-color: yellow;
     color: black;
+    
 }
