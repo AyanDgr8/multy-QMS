@@ -83,6 +83,8 @@
     margin-left: 40%;
     text-align: left;
     font-size: 0.9em;
+    height: 30vh;
+    overflow-y: auto;
 }
 
 .wordss{
