@@ -27,18 +27,19 @@ const MainFiles = ({ searchQuery }) => {
                 const queryString = params.toString();
                 console.log(`Query string: ${queryString}`);
 
-                if (queryString) {
-                    const response = await fetch(`http://localhost:8000/api/search-transcriptions/?${queryString}`);
-                    if (!response.ok) {
-                        const errorText = await response.text();
-                        throw new Error(`Network response was not ok: ${errorText}`);
-                    }
-                    const result = await response.json();
-                    console.log("API response:", result);
-                    setData(result);
-                } else {
-                    setData([]);
+                // Use the correct endpoint for fetching all transcriptions
+                const url = queryString
+                    ? `http://localhost:8000/api/search-transcriptions/?${queryString}`
+                    : `http://localhost:8000/api/transcriptions/`;
+
+                const response = await fetch(url);
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Network response was not ok: ${errorText}`);
                 }
+                const result = await response.json();
+                console.log("API response:", result);
+                setData(result);
             } catch (error) {
                 console.error("Error during fetch:", error.message);
                 setError(error.message);
@@ -47,10 +48,8 @@ const MainFiles = ({ searchQuery }) => {
             }
         };
 
-        if (searchQuery) {
-            setLoading(true);
-            fetchData();
-        }
+        setLoading(true);
+        fetchData();
     }, [searchQuery]);
 
     const toggleDetails = (fileId) => {
@@ -66,16 +65,18 @@ const MainFiles = ({ searchQuery }) => {
         }
     };
 
-    const highlightText = (text, searchTerms) => {
-        if (!searchTerms) return text;
-
+    const highlightText = (text, searchTerms, additionalTerms) => {
+        if (!searchTerms && !additionalTerms) return text;
+    
+        const allTerms = `${searchTerms || ''} ${additionalTerms || ''}`.trim();
+    
         // Escape special characters for regex
-        const escapedSearchTerms = searchTerms.split(' ').map(term => term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+        const escapedSearchTerms = allTerms.split(' ').map(term => term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
         const regex = new RegExp(`(${escapedSearchTerms})`, 'gi');
-
+    
         return text.replace(regex, '<span class="highlight">$1</span>');
     };
-
+    
     if (loading) {
         return <div>Loading...</div>;
     }
@@ -113,19 +114,19 @@ const MainFiles = ({ searchQuery }) => {
                                         </tr>
                                         <tr className="details">
                                             <th>Agent Transcription</th>
-                                            <td dangerouslySetInnerHTML={{ __html: highlightText(item.agent_transcription, searchQuery.spokenWords) }}></td>
+                                            <td dangerouslySetInnerHTML={{ __html: highlightText(item.agent_transcription, searchQuery.spokenWords, searchQuery.addWords) }}></td>
                                         </tr>
                                         <tr className="details">
                                             <th>Agent Translation</th>
-                                            <td dangerouslySetInnerHTML={{ __html: highlightText(item.agent_translation, searchQuery.spokenWords) }}></td>
+                                            <td dangerouslySetInnerHTML={{ __html: highlightText(item.agent_translation, searchQuery.spokenWords, searchQuery.addWords) }}></td>
                                         </tr>
                                         <tr className="details">
                                             <th>Customer Transcription</th>
-                                            <td dangerouslySetInnerHTML={{ __html: highlightText(item.customer_transcription, searchQuery.spokenWords) }}></td>
+                                            <td dangerouslySetInnerHTML={{ __html: highlightText(item.customer_transcription, searchQuery.spokenWords, searchQuery.addWords) }}></td>
                                         </tr>
                                         <tr className="details">
                                             <th>Customer Translation</th>
-                                            <td dangerouslySetInnerHTML={{ __html: highlightText(item.customer_translation, searchQuery.spokenWords) }}></td>
+                                            <td dangerouslySetInnerHTML={{ __html: highlightText(item.customer_translation, searchQuery.spokenWords, searchQuery.addWords) }}></td>
                                         </tr>
                                         <tr className="details">
                                             <th>Agent Sentiment Score</th>

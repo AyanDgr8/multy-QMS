@@ -87,10 +87,3 @@ button.toggle-button {
 }
 
 
-/* Add this to the existing MainFiles.css */
-
-mainfiles-container .mark {
-    background-color: yellow;
-    color: black;
-    
-}
