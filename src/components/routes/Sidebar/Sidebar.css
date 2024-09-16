@@ -78,12 +78,13 @@
 
 .word-groupss{
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
     margin-bottom: 1rem;
+    margin-left: 40%;
+    text-align: left;
     font-size: 0.9em;
 }
 
 .wordss{
-    margin-right: 1rem;
+    margin-left: 0.5rem;
 }

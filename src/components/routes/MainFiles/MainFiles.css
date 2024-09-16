@@ -92,3 +92,8 @@ button.toggle-button {
     font-weight: bold;
 }
 
+.search-terms-count{
+    display: flex;
+    justify-content: center;
+    gap :1rem;
+}
