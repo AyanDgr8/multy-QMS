@@ -1,5 +1,4 @@
-// src/components/routes/Landing/Landing/Landing.js
-
+// src/components/routes/Landing/Landing.js
 
 import React, { useState } from "react";
 import './Landing.css';
@@ -12,15 +11,19 @@ import Sidebar from "../Sidebar/Sidebar";
 const Landing = () => {
     const [selectedFilter, setSelectedFilter] = useState("ReportData"); // Default filter is ReportData
     const [searchQuery, setSearchQuery] = useState("");
+    const [wordGroups, setWordGroups] = useState({
+        positive: [],
+        negative: [],
+        neutral: []
+    });
 
-    // This function will handle the filter change
+    // Function to handle filter changes
     const handleFilterChange = (filter) => {
         setSelectedFilter(filter);
     };
 
-    // Define the onSearch function
+    // Function to handle search actions
     const handleSearch = (spokenWords, addWords, timeBasis) => {
-        // Create searchQuery object with named properties
         const query = {
             spokenWords: spokenWords || '',
             addWords: addWords || '',
@@ -29,26 +32,32 @@ const Landing = () => {
         setSearchQuery(query);
         console.log('Search triggered with:', query);
     };
-    
+
+    // Function to handle changes in selected word groups
+    const handleWordGroupsChange = (newWordGroups) => {
+        setWordGroups(newWordGroups); // Update the word groups state with the new data from Sidebar
+    };
 
     return (
         <div>
             <div className="everything">
                 <div className="main-first">
-                    <Header onFilterChange={handleFilterChange} /> {/* Pass the filter change handler */}
+                    <Header onFilterChange={handleFilterChange} /> {/* Pass filter change handler to Header */}
                 </div>
                 <div className="main-second">
-                    <div className="side-content"> 
-                        <Sidebar />
+                    <div className="side-content">
+                        {/* Pass the handleWordGroupsChange function to Sidebar */}
+                        <Sidebar onWordGroupsChange={handleWordGroupsChange} />
                     </div>
                     <div className="mbody-content">
-                        {/* Conditionally render MainBody or MainBody2 and pass handleSearch as a prop to MainBody */}
+                        {/* Conditionally render MainBody or MainBody2 based on selectedFilter */}
                         {selectedFilter === "ReportData" ? (
-                            <MainBody onSearch={handleSearch} /> 
+                            <MainBody onSearch={handleSearch} />
                         ) : (
                             <MainBody2 />
                         )}
-                        <MainFiles searchQuery={searchQuery} />
+                        {/* Pass searchQuery and wordGroups to MainFiles */}
+                        <MainFiles searchQuery={searchQuery} wordGroups={wordGroups} />
                     </div>
                 </div>
             </div>

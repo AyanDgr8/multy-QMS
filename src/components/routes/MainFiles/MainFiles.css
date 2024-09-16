@@ -81,9 +81,14 @@ button.toggle-button {
 }
 
 .highlight {
-    background-color: #EF6F53;
+    background-color: #364C63;
     color: white;
     font-weight: bold;
 }
 
+.highlight-green {
+    background-color: #00FF00; 
+    color: black;
+    font-weight: bold;
+}
 

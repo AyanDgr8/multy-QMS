@@ -3,11 +3,12 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./MainFiles.css";
 
-const MainFiles = ({ searchQuery }) => {
+const MainFiles = ({ searchQuery, wordGroups }) => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [openFileId, setOpenFileId] = useState(null);
+    const [termCounts, setTermCounts] = useState({});
     const containerRef = useRef(null);
 
     useEffect(() => {
@@ -39,7 +40,64 @@ const MainFiles = ({ searchQuery }) => {
                 }
                 const result = await response.json();
                 console.log("API response:", result);
-                setData(result);
+
+                // Calculate term counts and highlight text
+                const termCountsMap = {};
+                const filteredData = result.map(item => {
+                    const allTerms = [
+                        searchQuery.spokenWords,
+                        searchQuery.addWords,
+                        ...Object.values(wordGroups).flat().filter(term => typeof term === 'string')
+                    ].filter(Boolean).join(' ').trim();
+
+                    // Create a regex pattern to match any of the words in the content
+                    const escapedTerms = allTerms.split(' ').map(term => term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+                    const regex = new RegExp(`(${escapedTerms})`, 'gi');
+
+                    // Update term counts
+                    const counts = {};
+                    [item.agent_transcription, item.agent_translation, item.customer_transcription, item.customer_translation].forEach(field => {
+                        if (field) {
+                            const matches = field.match(regex);
+                            if (matches) {
+                                matches.forEach(match => {
+                                    const term = match.toLowerCase();
+                                    counts[term] = (counts[term] || 0) + 1;
+                                });
+                            }
+                        }
+                    });
+
+                    // Add counts to the global termCountsMap
+                    Object.keys(counts).forEach(term => {
+                        termCountsMap[term] = (termCountsMap[term] || 0) + counts[term];
+                    });
+
+                    // Highlight text
+                    const highlightText = (text) => {
+                        return text.replace(regex, (match) => `<span class="${highlightClass(match)}">${match}</span>`);
+                    };
+
+                    // Determine the highlight class
+                    const highlightClass = (term) => {
+                        const termIsInWordGroups = Object.values(wordGroups).flat()
+                            .filter(item => typeof item === 'string')
+                            .some(groupTerm => groupTerm.toLowerCase() === term.toLowerCase());
+
+                        return termIsInWordGroups ? 'highlight-green' : 'highlight';
+                    };
+
+                    return {
+                        ...item,
+                        agent_transcription: highlightText(item.agent_transcription || ''),
+                        agent_translation: highlightText(item.agent_translation || ''),
+                        customer_transcription: highlightText(item.customer_transcription || ''),
+                        customer_translation: highlightText(item.customer_translation || '')
+                    };
+                });
+
+                setTermCounts(termCountsMap);
+                setData(filteredData);
             } catch (error) {
                 console.error("Error during fetch:", error.message);
                 setError(error.message);
@@ -50,7 +108,7 @@ const MainFiles = ({ searchQuery }) => {
 
         setLoading(true);
         fetchData();
-    }, [searchQuery]);
+    }, [searchQuery, wordGroups]);
 
     const toggleDetails = (fileId) => {
         if (openFileId === fileId) {
@@ -65,18 +123,36 @@ const MainFiles = ({ searchQuery }) => {
         }
     };
 
-    const highlightText = (text, searchTerms, additionalTerms) => {
-        if (!searchTerms && !additionalTerms) return text;
-    
-        const allTerms = `${searchTerms || ''} ${additionalTerms || ''}`.trim();
-    
-        // Escape special characters for regex
-        const escapedSearchTerms = allTerms.split(' ').map(term => term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
-        const regex = new RegExp(`(${escapedSearchTerms})`, 'gi');
-    
-        return text.replace(regex, '<span class="highlight">$1</span>');
+    const highlightText = (text, searchTerms, additionalTerms, wordGroups) => {
+        if (!searchTerms && !additionalTerms && !wordGroups) return text;
+
+        try {
+            const allTerms = [
+                searchTerms,
+                additionalTerms,
+                ...Object.values(wordGroups).flat().filter(term => typeof term === 'string')
+            ].filter(Boolean).join(' ').trim();
+
+            // Escape special characters for regex
+            const escapedSearchTerms = allTerms.split(' ').map(term => term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+            const regex = new RegExp(`(${escapedSearchTerms})`, 'gi');
+
+            // Determine the highlight class
+            const highlightClass = (term) => {
+                const termIsInWordGroups = Object.values(wordGroups).flat()
+                    .filter(item => typeof item === 'string')
+                    .some(groupTerm => groupTerm.toLowerCase() === term.toLowerCase());
+
+                return termIsInWordGroups ? 'highlight-green' : 'highlight';
+            };
+
+            return text.replace(regex, (match) => `<span class="${highlightClass(match)}">${match}</span>`);
+        } catch (error) {
+            console.error('Error highlighting text:', error);
+            return text; // Fallback to returning original text
+        }
     };
-    
+
     if (loading) {
         return <div>Loading...</div>;
     }
@@ -87,6 +163,13 @@ const MainFiles = ({ searchQuery }) => {
 
     return (
         <div className="mainfiles-container" ref={containerRef}>
+            <div className="search-terms-count">
+                {Object.entries(termCounts).map(([term, count]) => (
+                    <div key={term}>
+                        <strong>{term}:</strong> {count} occurrences
+                    </div>
+                ))}
+            </div>
             {data.length === 0 ? (
                 <p>No data found</p>
             ) : (
@@ -114,19 +197,19 @@ const MainFiles = ({ searchQuery }) => {
                                         </tr>
                                         <tr className="details">
                                             <th>Agent Transcription</th>
-                                            <td dangerouslySetInnerHTML={{ __html: highlightText(item.agent_transcription, searchQuery.spokenWords, searchQuery.addWords) }}></td>
+                                            <td dangerouslySetInnerHTML={{ __html: item.agent_transcription }}></td>
                                         </tr>
                                         <tr className="details">
                                             <th>Agent Translation</th>
-                                            <td dangerouslySetInnerHTML={{ __html: highlightText(item.agent_translation, searchQuery.spokenWords, searchQuery.addWords) }}></td>
+                                            <td dangerouslySetInnerHTML={{ __html: item.agent_translation }}></td>
                                         </tr>
                                         <tr className="details">
                                             <th>Customer Transcription</th>
-                                            <td dangerouslySetInnerHTML={{ __html: highlightText(item.customer_transcription, searchQuery.spokenWords, searchQuery.addWords) }}></td>
+                                            <td dangerouslySetInnerHTML={{ __html: item.customer_transcription }}></td>
                                         </tr>
                                         <tr className="details">
                                             <th>Customer Translation</th>
-                                            <td dangerouslySetInnerHTML={{ __html: highlightText(item.customer_translation, searchQuery.spokenWords, searchQuery.addWords) }}></td>
+                                            <td dangerouslySetInnerHTML={{ __html: item.customer_translation }}></td>
                                         </tr>
                                         <tr className="details">
                                             <th>Agent Sentiment Score</th>

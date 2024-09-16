@@ -67,3 +67,23 @@
 .si-srch{
     margin-top: -0.25rem;
 }
+
+.categorization{
+    margin-top: 3rem;
+    background-color: #EF6F53;
+    font-weight: 800;
+    color: white;
+    font-size: 0.9em;
+}
+
+.word-groupss{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    font-size: 0.9em;
+}
+
+.wordss{
+    margin-right: 1rem;
+}
