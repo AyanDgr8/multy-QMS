@@ -23,6 +23,8 @@ const Sidebar = ({ onWordGroupsChange }) => {
     neutral: false,
   });
 
+  const [customCategories, setCustomCategories] = useState([]); 
+
   // Fetch word groups from the backend API
   useEffect(() => {
     axios
@@ -64,10 +66,16 @@ const Sidebar = ({ onWordGroupsChange }) => {
       positive: selectedGroups.positive ? wordGroups.positive : [],
       negative: selectedGroups.negative ? wordGroups.negative : [],
       neutral: selectedGroups.neutral ? wordGroups.neutral : [],
+      custom: customCategories 
     };
 
     // Ensure to not trigger this inside render or during a state update
     onWordGroupsChange(selectedWords);
+  };
+
+  // Handle adding a new category
+  const handleAddCategory = (newCategory) => {
+    setCustomCategories([...customCategories, newCategory]);
   };
 
   return (
@@ -129,7 +137,7 @@ const Sidebar = ({ onWordGroupsChange }) => {
                 Positive
               </label>
               {selectedGroups.positive && (
-                <ul>
+                <ul className="listi">
                   {wordGroups.positive.map((word, index) => (
                     <li key={index}>{word}</li>
                   ))}
@@ -148,7 +156,7 @@ const Sidebar = ({ onWordGroupsChange }) => {
                 Negative
               </label>
               {selectedGroups.negative && (
-                <ul>
+                <ul className="listi">
                   {wordGroups.negative.map((word, index) => (
                     <li key={index}>{word}</li>
                   ))}
@@ -167,7 +175,7 @@ const Sidebar = ({ onWordGroupsChange }) => {
                 Neutral
               </label>
               {selectedGroups.neutral && (
-                <ul>
+                <ul className="listi">
                   {wordGroups.neutral.map((word, index) => (
                     <li key={index}>{word}</li>
                   ))}
@@ -175,7 +183,7 @@ const Sidebar = ({ onWordGroupsChange }) => {
               )}
             </div>
           </div>
-
+          
           {/* Search Button */}
           <button
             type="button"

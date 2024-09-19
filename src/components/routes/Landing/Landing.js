@@ -5,6 +5,7 @@ import './Landing.css';
 import MainBody from "../MainBody/MainBody";
 import MainBody2 from "../MainBody2/MainBody2";
 import MainFiles from "../MainFiles/MainFiles";
+import MainFiles2 from "../MainFiles2/MainFiles2"; // Import MainFiles2
 import Header from "../Header/Header";
 import Sidebar from "../Sidebar/Sidebar";
 
@@ -50,14 +51,21 @@ const Landing = () => {
                         <Sidebar onWordGroupsChange={handleWordGroupsChange} />
                     </div>
                     <div className="mbody-content">
-                        {/* Conditionally render MainBody or MainBody2 based on selectedFilter */}
-                        {selectedFilter === "ReportData" ? (
-                            <MainBody onSearch={handleSearch} />
-                        ) : (
+                        {/* Conditionally render MainBody, MainBody2, or MainFiles2 based on selectedFilter */}
+                        {selectedFilter === "ReportData" && (
+                            <>
+                                <MainBody onSearch={handleSearch} />
+                                <MainFiles searchQuery={searchQuery} wordGroups={wordGroups} />
+                            </>
+                        )}
+                        
+                        {selectedFilter === "Normal" && (
                             <MainBody2 />
                         )}
-                        {/* Pass searchQuery and wordGroups to MainFiles */}
-                        <MainFiles searchQuery={searchQuery} wordGroups={wordGroups} />
+
+                        {selectedFilter === "AddCategory" && (
+                            <MainFiles2 />
+                        )}
                     </div>
                 </div>
             </div>

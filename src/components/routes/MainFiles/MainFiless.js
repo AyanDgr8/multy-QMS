@@ -63,8 +63,7 @@ const MainFiles = ({ searchQuery, wordGroups }) => {
 
                         // Update term counts
                         const counts = {};
-                        [item.english_transcription, item.english_translation, item.analysis_english, 
-                         item.hindi_transcription, item.hindi_translation, item.analysis_hindi].forEach(field => {
+                        [item.agent_transcription, item.agent_translation, item.customer_transcription, item.customer_translation].forEach(field => {
                             if (field) {
                                 const matches = field.match(regex);
                                 if (matches) {
@@ -97,12 +96,10 @@ const MainFiles = ({ searchQuery, wordGroups }) => {
 
                         return {
                             ...item,
-                            hindi_transcription: highlightText(item.hindi_transcription || ''),
-                            english_transcription: highlightText(item.english_transcription || ''),
-                            hindi_translation: highlightText(item.hindi_translation || ''),
-                            english_translation: highlightText(item.english_translation || ''),
-                            analysis_hindi: highlightText(item.analysis_hindi || ''),
-                            analysis_english: highlightText(item.analysis_english || '')
+                            agent_transcription: highlightText(item.agent_transcription || ''),
+                            agent_translation: highlightText(item.agent_translation || ''),
+                            customer_transcription: highlightText(item.customer_transcription || ''),
+                            customer_translation: highlightText(item.customer_translation || '')
                         };
                     });
 
@@ -147,8 +144,7 @@ const MainFiles = ({ searchQuery, wordGroups }) => {
         const regex = new RegExp(`(${escapedTerms})`, 'gi');
 
         return data.filter(item =>
-            [item.english_transcription, item.english_translation, item.analysis_english, 
-                item.hindi_transcription, item.hindi_translation, item.analysis_hindi].some(field =>
+            [item.agent_transcription, item.agent_translation, item.customer_transcription, item.customer_translation].some(field =>
                 field && field.match(regex)
             )
         );
@@ -169,7 +165,7 @@ const MainFiles = ({ searchQuery, wordGroups }) => {
             <div className="search-terms-count">
                 {Object.entries(termCounts).map(([term, count]) => (
                     <div key={term}>
-                        <strong>{term}:</strong> {count} times
+                        <strong>{term}:</strong> {count} occurrences
                     </div>
                 ))}
             </div>
@@ -181,7 +177,7 @@ const MainFiles = ({ searchQuery, wordGroups }) => {
                             <tbody>
                                 <tr>
                                     <th>File Name</th>
-                                    <td>{item.caller_id}</td>
+                                    <td>{item.file_name}</td>
                                     <td>
                                         <button
                                             className="toggle-button"
@@ -195,48 +191,29 @@ const MainFiles = ({ searchQuery, wordGroups }) => {
                                     <>
                                         <tr className="details">
                                             <th>Date Time</th>
-                                            <td>{item.created_at}</td>
+                                            <td>{item.date_time}</td>
                                         </tr>
                                         <tr className="details">
-                                            <th>Hindi Transcription</th>
-                                            <td dangerouslySetInnerHTML={{ __html: item.hindi_transcription }}></td>
+                                            <th>Agent Transcription</th>
+                                            <td dangerouslySetInnerHTML={{ __html: item.agent_transcription }}></td>
                                         </tr>
                                         <tr className="details">
-                                            <th>English Transcription</th>
-                                            <td dangerouslySetInnerHTML={{ __html: item.english_transcription }}></td>
-                                        </tr>
-                                        {/* <tr className="details">
-                                            <th>Hindi Translation</th>
-                                            <td dangerouslySetInnerHTML={{ __html: item.hindi_translation }}></td>
+                                            <th>Agent Translation</th>
+                                            <td dangerouslySetInnerHTML={{ __html: item.agent_translation }}></td>
                                         </tr>
                                         <tr className="details">
-                                            <th>English Translation</th>
-                                            <td dangerouslySetInnerHTML={{ __html: item.english_translation }}></td>
-                                        </tr> */}
-
-                                        <tr className="details">
-                                            <th>Analysis Hindi</th>
-                                            <td dangerouslySetInnerHTML={{ __html: item.analysis_hindi }}></td>
+                                            <th>Customer Transcription</th>
+                                            <td dangerouslySetInnerHTML={{ __html: item.customer_transcription }}></td>
                                         </tr>
                                         <tr className="details">
-                                            <th>Analysis English</th>
-                                            <td dangerouslySetInnerHTML={{ __html: item.analysis_english }}></td>
+                                            <th>Customer Translation</th>
+                                            <td dangerouslySetInnerHTML={{ __html: item.customer_translation }}></td>
                                         </tr>
                                         <tr className="details">
-                                            <th>Hindi Sentiment</th>
-                                            <td>{item.hindi_sentiment}</td>
-                                        </tr>
-                                        <tr className="details">
-                                            <th>English sentiment</th>
-                                            <td>{item.english_sentiment}</td>
-                                        </tr>
-
-                                        <tr className="details">
-                                            <th>Download</th>
+                                            <th>Download Links</th>
                                             <td>
-                                                <a href={item.audio_file_link} download>
-                                                    Download
-                                                </a>
+                                                <a href={item.audio_file_link} target="_blank" rel="noreferrer">Audio File</a> | 
+                                                <a href={item.transcript_file_link} target="_blank" rel="noreferrer">Transcript File</a>
                                             </td>
                                         </tr>
                                     </>
@@ -252,7 +229,7 @@ const MainFiles = ({ searchQuery, wordGroups }) => {
                             <tbody>
                                 <tr>
                                     <th>File Name</th>
-                                    <td>{item.caller_id}</td>
+                                    <td>{item.file_name}</td>
                                     <td>
                                         <button
                                             className="toggle-button"
@@ -266,47 +243,29 @@ const MainFiles = ({ searchQuery, wordGroups }) => {
                                     <>
                                         <tr className="details">
                                             <th>Date Time</th>
-                                            <td>{item.created_at}</td>
+                                            <td>{item.date_time}</td>
                                         </tr>
                                         <tr className="details">
-                                            <th>Hindi Transcription</th>
-                                            <td dangerouslySetInnerHTML={{ __html: item.hindi_transcription }}></td>
+                                            <th>Agent Transcription</th>
+                                            <td dangerouslySetInnerHTML={{ __html: item.agent_transcription }}></td>
                                         </tr>
                                         <tr className="details">
-                                            <th>English Transcription</th>
-                                            <td dangerouslySetInnerHTML={{ __html: item.english_transcription }}></td>
-                                        </tr>
-                                        {/* <tr className="details">
-                                            <th>Hindi Translation</th>
-                                            <td dangerouslySetInnerHTML={{ __html: item.hindi_translation }}></td>
+                                            <th>Agent Translation</th>
+                                            <td dangerouslySetInnerHTML={{ __html: item.agent_translation }}></td>
                                         </tr>
                                         <tr className="details">
-                                            <th>English Translation</th>
-                                            <td dangerouslySetInnerHTML={{ __html: item.english_translation }}></td>
-                                        </tr> */}
-                                        <tr className="details">
-                                            <th>Analysis Hindi</th>
-                                            <td dangerouslySetInnerHTML={{ __html: item.analysis_hindi }}></td>
+                                            <th>Customer Transcription</th>
+                                            <td dangerouslySetInnerHTML={{ __html: item.customer_transcription }}></td>
                                         </tr>
                                         <tr className="details">
-                                            <th>Analysis English</th>
-                                            <td dangerouslySetInnerHTML={{ __html: item.analysis_english }}></td>
+                                            <th>Customer Translation</th>
+                                            <td dangerouslySetInnerHTML={{ __html: item.customer_translation }}></td>
                                         </tr>
                                         <tr className="details">
-                                            <th>Hindi Sentiment</th>
-                                            <td>{item.hindi_sentiment}</td>
-                                        </tr>
-                                        <tr className="details">
-                                            <th>English sentiment</th>
-                                            <td>{item.english_sentiment}</td>
-                                        </tr>
-
-                                        <tr className="details">
-                                            <th>Download</th>
+                                            <th>Download Links</th>
                                             <td>
-                                                <a href={item.audio_file_link} download>
-                                                    Download
-                                                </a>
+                                                <a href={item.audio_file_link} target="_blank" rel="noreferrer">Audio File</a> | 
+                                                <a href={item.transcript_file_link} target="_blank" rel="noreferrer">Transcript File</a>
                                             </td>
                                         </tr>
                                     </>

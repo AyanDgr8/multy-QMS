@@ -1,6 +1,5 @@
 // src/components/routes/Header/Header/Header.js
 
-
 import React from "react";
 import "./Header.css";
 
@@ -59,12 +58,11 @@ const Header = ({ onFilterChange }) => {
                                 </li>
                                 <li>
                                     <a 
-                                        className="dropdown-item disabled" 
+                                        className="dropdown-item" 
                                         href="#" 
-                                        tabIndex="-1" 
-                                        aria-disabled="true"
+                                        onClick={() => handleDropdownSelect("AddCategory")}
                                     >
-                                        FCR
+                                        Add Category
                                     </a>
                                 </li>
                             </ul>

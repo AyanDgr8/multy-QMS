@@ -83,8 +83,12 @@
     margin-left: 40%;
     text-align: left;
     font-size: 0.9em;
-    height: 30vh;
+    height: 25vh;
     overflow-y: auto;
+}
+
+.wordss:hover{
+    color: #EF6F53;
 }
 
 .wordss{
