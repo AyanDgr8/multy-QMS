@@ -163,16 +163,21 @@ const MainFiles = ({ searchQuery, wordGroups }) => {
     }
 
     const filteredData = filterData(data, searchQuery?.spokenWords, searchQuery?.addWords, wordGroups);
+    
+    // Check if there's any search term present
+    const hasSearchTerms = searchQuery?.spokenWords || searchQuery?.addWords || Object.values(wordGroups).flat().length > 0;
 
     return (
         <div className="mainfiles-container" ref={containerRef}>
-            <div className="search-terms-count">
-                {Object.entries(termCounts).map(([term, count]) => (
-                    <div key={term}>
-                        <strong>{term}:</strong> {count} times
-                    </div>
-                ))}
-            </div>
+            {hasSearchTerms && (
+                <div className="search-terms-count">
+                    {Object.entries(termCounts).map(([term, count]) => (
+                        <div key={term}>
+                            <strong>{term}:</strong> {count} times
+                        </div>
+                    ))}
+                </div>
+            )}
             {filteredData.length === 0 ? (
                 // Display all files when there's no search result
                 data.map(item => (

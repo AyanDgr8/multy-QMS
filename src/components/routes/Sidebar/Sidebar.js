@@ -89,7 +89,7 @@ const Sidebar = ({ onWordGroupsChange }) => {
               Start Date
             </span>
             <input
-              type="text"
+              type ="date"
               className="form-control inp"
               aria-label="Sizing example input"
               aria-describedby="inputGroup-sizing-sm"
@@ -109,7 +109,7 @@ const Sidebar = ({ onWordGroupsChange }) => {
               End Date
             </span>
             <input
-              type="text"
+              type ="date"
               className="form-control inp"
               aria-label="Sizing example input"
               aria-describedby="inputGroup-sizing-sm"
